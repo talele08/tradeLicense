@@ -10,11 +10,13 @@ import org.egov.tl.web.models.Idgen.IdResponse;
 import org.egov.tl.web.models.user.UserDetailResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Service
 public class EnrichmentService {
 
     private IdGenRepository idGenRepository;
@@ -37,6 +39,7 @@ public class EnrichmentService {
             tradeLicense.setAuditDetails(auditDetails);
             tradeLicense.setId(UUID.randomUUID().toString());
             tradeLicense.setApplicationDate(auditDetails.getCreatedTime());
+            tradeLicense.getTradeLicenseDetail().setId(UUID.randomUUID().toString());
 
             tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
                 accessory.setTenantId(tradeLicense.getTenantId());
@@ -93,11 +96,11 @@ public class EnrichmentService {
         String tenantId = request.getLicenses().get(0).getTenantId();
         List<TradeLicense> licenses = request.getLicenses();
 
-        List<String> licenseNumbers = getIdList(requestInfo, tenantId, config.getLicenseNumberIdgenName(), config.getLicenseNumberIdgenFormat(), request.getLicenses().size());
-        ListIterator<String> itLn = licenseNumbers.listIterator();
+        List<String> applicationNumbers = getIdList(requestInfo, tenantId, config.getApplicationNumberIdgenName(), config.getApplicationNumberIdgenFormat(), request.getLicenses().size());
+        ListIterator<String> itr = applicationNumbers.listIterator();
 
         Map<String, String> errorMap = new HashMap<>();
-        if (licenseNumbers.size() != request.getLicenses().size()) {
+        if (applicationNumbers.size() != request.getLicenses().size()) {
             errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of TradeLicenses");
         }
 
@@ -105,7 +108,7 @@ public class EnrichmentService {
             throw new CustomException(errorMap);
 
         licenses.forEach(tradeLicense -> {
-            tradeLicense.setLicenseNumber(itLn.next());
+            tradeLicense.setApplicationNumber(itr.next());
         });
     }
 

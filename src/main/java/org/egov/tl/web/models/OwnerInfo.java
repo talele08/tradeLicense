@@ -26,8 +26,7 @@ import javax.validation.constraints.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-        public class OwnerInfo extends User  {
+public class OwnerInfo extends User  {
 
         @JsonProperty("isPrimaryOwner")
         private Boolean isPrimaryOwner;
@@ -193,5 +192,5 @@ import javax.validation.constraints.*;
 
                 return super.hashCode();
         }
-        }
+}
 

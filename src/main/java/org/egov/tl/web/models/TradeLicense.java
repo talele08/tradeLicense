@@ -73,6 +73,9 @@ public class  TradeLicense   {
         @JsonProperty("licenseNumber")
         private String licenseNumber = null;
 
+        @JsonProperty("applicationNumber")
+        private String applicationNumber;
+
         @JsonProperty("oldLicenseNumber")
         private String oldLicenseNumber = null;
 

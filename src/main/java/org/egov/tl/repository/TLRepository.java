@@ -6,20 +6,26 @@ import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class TLRepository {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
     private TLQueryBuilder queryBuilder;
 
-    @Autowired
     private TLRowMapper rowMapper;
+
+    @Autowired
+    public TLRepository(JdbcTemplate jdbcTemplate, TLQueryBuilder queryBuilder, TLRowMapper rowMapper) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.queryBuilder = queryBuilder;
+        this.rowMapper = rowMapper;
+    }
 
     public List<TradeLicense> getLicenses(TradeLicenseSearchCriteria criteria){
         List<Object> preparedStmtList = new ArrayList<>();

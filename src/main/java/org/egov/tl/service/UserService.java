@@ -15,6 +15,7 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
@@ -23,6 +24,7 @@ import java.util.*;
 
 
 @Slf4j
+@Service
 public class UserService{
 
 

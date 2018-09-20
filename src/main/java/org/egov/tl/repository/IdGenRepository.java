@@ -2,6 +2,7 @@ package org.egov.tl.repository;
 
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.tl.config.TlConfiguration;
 import org.egov.tl.web.models.Idgen.IdGenerationRequest;
 import org.egov.tl.web.models.Idgen.IdGenerationResponse;
 import org.egov.tl.web.models.Idgen.IdRequest;
@@ -21,14 +22,17 @@ import java.util.Map;
 @Repository
 public class IdGenRepository {
 
-    @Value("${egov.idgen.host}")
-    private String idGenHost;
 
-    @Value("${egov.idgen.path}")
-    private String idGenPath;
+
+    private RestTemplate restTemplate;
+
+    private TlConfiguration config;
 
     @Autowired
-    private RestTemplate restTemplate;
+    public IdGenRepository(RestTemplate restTemplate, TlConfiguration config) {
+        this.restTemplate = restTemplate;
+        this.config = config;
+    }
 
 
     public IdGenerationResponse getId(RequestInfo requestInfo, String tenantId, String name, String format, int count) {
@@ -40,7 +44,7 @@ public class IdGenRepository {
         IdGenerationRequest req = IdGenerationRequest.builder().idRequests(reqList).requestInfo(requestInfo).build();
         IdGenerationResponse response = null;
         try {
-            response = restTemplate.postForObject(idGenHost + idGenPath, req, IdGenerationResponse.class);
+            response = restTemplate.postForObject( config.getIdGenHost()+ config.getIdGenPath(), req, IdGenerationResponse.class);
         } catch (HttpClientErrorException e) {
             throw new ServiceCallException(e.getResponseBodyAsString());
         } catch (Exception e) {

@@ -7,8 +7,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.util.ArrayList;
 import java.util.List;
-import org.egov.tl.web.models.ResponseInfo2;
-import org.egov.tl.web.models.TradeLicense;
+
+import org.egov.common.contract.response.ResponseInfo;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -31,10 +31,10 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class TradeLicenseResponse   {
-        @JsonProperty("responseInfo")
-        private ResponseInfo2 responseInfo = null;
+        @JsonProperty("ResponseInfo")
+        private ResponseInfo responseInfo = null;
 
-        @JsonProperty("licenses")
+        @JsonProperty("Licenses")
         @Valid
         private List<TradeLicense> licenses = null;
 

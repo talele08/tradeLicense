@@ -1,7 +1,9 @@
 package org.egov.tl.util;
 
 import org.egov.tl.web.models.AuditDetails;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TradeUtil {
 
     /**

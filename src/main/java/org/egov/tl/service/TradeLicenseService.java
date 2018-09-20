@@ -9,10 +9,12 @@ import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.web.models.user.UserDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
 
+@Service
 public class TradeLicenseService {
 
     private EnrichmentService enrichmentService;
@@ -26,6 +28,7 @@ public class TradeLicenseService {
     private TLRepository repository;
 
 
+    @Autowired
     public TradeLicenseService(EnrichmentService enrichmentService, Producer producer, TlConfiguration config,
                                UserService userService, TLRepository repository) {
         this.enrichmentService = enrichmentService;
@@ -35,7 +38,6 @@ public class TradeLicenseService {
         this.repository = repository;
     }
 
-    @Autowired
 
 
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){

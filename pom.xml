@@ -52,6 +52,10 @@
             <artifactId>swagger-core</artifactId>
             <version>1.5.18</version>
         </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
         <!-- Egov dependencies -->
         <dependency>
             <groupId>org.egov.services</groupId>

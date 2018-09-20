@@ -29,10 +29,10 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class TradeLicenseRequest   {
-        @JsonProperty("requestInfo")
+        @JsonProperty("RequestInfo")
         private RequestInfo requestInfo = null;
 
-        @JsonProperty("licenses")
+        @JsonProperty("Licenses")
         @Valid
         private List<TradeLicense> licenses = null;
 

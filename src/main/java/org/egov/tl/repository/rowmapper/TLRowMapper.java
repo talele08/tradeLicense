@@ -8,6 +8,7 @@ import org.postgresql.util.PGobject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Component
 public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
 
 
@@ -164,7 +166,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
         Boolean isPrimaryOwner = (Boolean) rs.getObject("isprimaryowner");
         Double ownerShipPercentage = (Double) rs.getObject("ownershippercentage") ;
 
-        OwnerInfo owner = OwnerInfo.builder().uuid(rs.getString("userid"))
+        OwnerInfo owner = OwnerInfo.builder()
+                .uuid(rs.getString("userid"))
                 .isPrimaryOwner(isPrimaryOwner)
                 .ownerType(rs.getString("ownerType"))
                 .ownerShipPercentage(ownerShipPercentage)
