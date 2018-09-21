@@ -44,8 +44,11 @@ import javax.servlet.http.HttpServletRequest;
 
         @PostMapping("/_create")
         public ResponseEntity<TradeLicenseResponse> create(@Valid @RequestBody TradeLicenseRequest tradeLicenseRequest)
-        {       tradeLicenseService.create(tradeLicenseRequest);
-                return new ResponseEntity<TradeLicenseResponse>(HttpStatus.OK);
+        {   List<TradeLicense> licenses = tradeLicenseService.create(tradeLicenseRequest);
+                TradeLicenseResponse response = TradeLicenseResponse.builder().licenses(licenses).responseInfo(
+                    responseInfoFactory.createResponseInfoFromRequestInfo(tradeLicenseRequest.getRequestInfo(), true))
+                    .build();
+                return new ResponseEntity<>(response,HttpStatus.OK);
         }
 
         @RequestMapping(value="/_search", method = RequestMethod.POST)

@@ -122,15 +122,16 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                     .lastModifiedTime(rs.getLong("tld_createdTime"))
                     .build();
 
-            PGobject obj = (PGobject) rs.getObject("additionalDetails");
+            Object obj = rs.getObject("additionaldetail");
+            PGobject pgObj = (PGobject) rs.getObject("additionaldetail");
             try {
-                JsonNode additionalDetails = mapper.readTree( obj.getValue());
+                JsonNode additionalDetail = mapper.readTree(pgObj.getValue());
                 TradeLicenseDetail tradeLicenseDetail = TradeLicenseDetail.builder()
                         .surveyNo(rs.getString("surveyno"))
                         .channel(TradeLicenseDetail.ChannelEnum.valueOf(rs.getString("channel")))
                         .subOwnerShipCategory(rs.getString("subownershipcategory"))
                         .id(tradeLicenseDetailId)
-                        .additionalDetail(additionalDetails)
+                        .additionalDetail(additionalDetail)
                         .address(address)
                         .auditDetails(auditdetails)
                         .build();

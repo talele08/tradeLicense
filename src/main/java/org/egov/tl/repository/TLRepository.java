@@ -1,5 +1,6 @@
 package org.egov.tl.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.tl.repository.builder.TLQueryBuilder;
 import org.egov.tl.repository.rowmapper.TLRowMapper;
 import org.egov.tl.web.models.TradeLicense;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Repository
 public class TLRepository {
 
@@ -30,7 +32,7 @@ public class TLRepository {
     public List<TradeLicense> getLicenses(TradeLicenseSearchCriteria criteria){
         List<Object> preparedStmtList = new ArrayList<>();
         String query = queryBuilder.getTLSearchQuery(criteria, preparedStmtList);
-        //log.info("Query: "+query);
+        log.info("Query: "+query);
         return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
     }
 

@@ -44,18 +44,18 @@ CREATE TABLE eg_tl_TradeLicenseDetail(
 
 
 CREATE TABLE eg_tl_TradeUnit(
-    id character varying(64),
+    id character varying(64) NOT NULL,
     tenantId character varying(64),
     tradetype character varying(64),
     uom character varying(64),
     uomValue character varying(64),
-    tradeLicenseDetailId character varying(64),
+    tradeLicenseDetailId character varying(64) NOT NULL,
     createdBy character varying(64),
     lastModifiedBy character varying(64),
     createdTime bigint,
     lastModifiedTime bigint,
 
-    CONSTRAINT uk_eg_tl_TradeUnit UNIQUE (id),
+    CONSTRAINT pk_eg_tl_TradeUnit PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_TradeUnit FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
 );
 
@@ -72,7 +72,7 @@ CREATE TABLE eg_tl_Accessory(
     createdTime bigint,
     lastModifiedTime bigint,
 
-    CONSTRAINT uk_eg_tl_Accessory UNIQUE (id),
+    CONSTRAINT uk_eg_tl_Accessory PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_Accessory FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
 );
 
@@ -89,7 +89,7 @@ CREATE TABLE eg_tl_ApplicationDocument(
     createdTime bigint,
     lastModifiedTime bigint,
 
-    CONSTRAINT uk_eg_tl_ApplicationDocument UNIQUE (id),
+    CONSTRAINT uk_eg_tl_ApplicationDocument PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_ApplicationDocument FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
 );
 
@@ -106,7 +106,7 @@ CREATE TABLE eg_tl_VerificationDocument(
     createdTime bigint,
     lastModifiedTime bigint,
 
-    CONSTRAINT uk_eg_tl_VerificationDocument UNIQUE (id),
+    CONSTRAINT uk_eg_tl_VerificationDocument PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_VerificationDocument FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
 );
 
@@ -116,13 +116,16 @@ CREATE TABLE eg_tl_address(
     doorNo character varying(64),
     latitude FLOAT,
     longitude FLOAT,
+    buildingName character varying(64),
     addressId character varying(64),
     addressNumber character varying(64),
     type character varying(64),
     addressLine1 character varying(256),
     addressLine2 character varying(256),
     landmark character varying(64),
+    street character varying(64),
     city character varying(64),
+    locality character varying(64),
     pincode character varying(64),
     detail character varying(64),
     tradeLicenseDetailId character varying(64),
@@ -131,7 +134,7 @@ CREATE TABLE eg_tl_address(
     createdTime bigint,
     lastModifiedTime bigint,
 
-    CONSTRAINT uk_eg_tl_address UNIQUE (id),
+    CONSTRAINT uk_eg_tl_address PRIMARY KEY (id),
     CONSTRAINT fk_eg_tl_address FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
       ON UPDATE CASCADE
       ON DELETE CASCADE
@@ -151,7 +154,7 @@ CREATE TABLE eg_tl_owner(
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
- CONSTRAINT uk_eg_tl_owner UNIQUE (id),
+  CONSTRAINT uk_eg_tl_owner PRIMARY KEY (id,tradeLicenseDetailId),
   CONSTRAINT fk_eg_tl_owner FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
   ON UPDATE CASCADE
   ON DELETE CASCADE

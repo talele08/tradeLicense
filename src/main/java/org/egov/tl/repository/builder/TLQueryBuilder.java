@@ -25,13 +25,13 @@ public class TLQueryBuilder {
 
     private static final String QUERY = "SELECT tl.*,tld.*,tlunit.*,tlacc.*,tlowner.*," +
             "tladdress.*,tlapldoc.*,tlverdoc.*,tl.id as tl_id,tl.tenantid as tl_tenantId,tl.lastModifiedTime as " +
-            "tl_lastModifiedTime,tl.createdBy as tl_createdBy,tl.lastModifiedBy as tl_lastModifiedBy,tl.createdTime as" +
-            "tl_createdTime,tld.id as tld_id,tladdress.id as tl_ad_id,tld.createdBy as tld_createdBy," +
-            "tld.createdTime as tld_createdTime,tld.lastModifiedBy as tld_lastModifiedBy,tld.createdTime as" +
+            "tl_lastModifiedTime,tl.createdBy as tl_createdBy,tl.lastModifiedBy as tl_lastModifiedBy,tl.createdTime as " +
+            "tl_createdTime,tld.id as tld_id,tladdress.id as tl_ad_id,tld.createdBy as tld_createdBy,tlowner.id as userid," +
+            "tld.createdTime as tld_createdTime,tld.lastModifiedBy as tld_lastModifiedBy,tld.createdTime as " +
             "tld_createdTime,tlunit.id as tl_un_id,tlunit.tradeType as tl_un_tradeType,tlunit.uom as tl_un_uom," +
             "tlunit.uomvalue as tl_un_uomvalue,tlacc.id as tl_acc_id,tlacc.uom as tl_acc_uom,tlacc.uomvalue as tl_acc_uomvalue," +
             "tlapldoc.id as tl_ap_doc_id,tlapldoc.documenttype as tl_ap_doc_documenttype,tlapldoc.filestoreid as tl_ap_doc_filestoreid," +
-            "tlverdoc.id as tl_ver_doc_id,tlverdoc.documenttype as tl_ver_doc_documenttype,tlverdoc.filestoreid as tl_ver_doc_filestoreid" +
+            "tlverdoc.id as tl_ver_doc_id,tlverdoc.documenttype as tl_ver_doc_documenttype,tlverdoc.filestoreid as tl_ver_doc_filestoreid " +
             " FROM eg_tl_tradelicense tl"
             +INNER_JOIN_STRING
             +"eg_tl_tradelicensedetail tld ON tld.tradelicenseid = tl.id"
@@ -67,6 +67,11 @@ public class TLQueryBuilder {
         if(!CollectionUtils.isEmpty(ids)) {
             builder.append("and tl.id IN (").append(createQuery(ids)).append(")");
             addToPreparedStatement(preparedStmtList,ids);
+        }
+
+        if(criteria.getApplicationNumber()!=null){
+            builder.append(" and tl.applicationnumber = ? ");
+            preparedStmtList.add(criteria.getApplicationNumber());
         }
 
         if(criteria.getStatus()!=null){

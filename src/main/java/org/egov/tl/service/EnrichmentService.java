@@ -40,6 +40,10 @@ public class EnrichmentService {
             tradeLicense.setId(UUID.randomUUID().toString());
             tradeLicense.setApplicationDate(auditDetails.getCreatedTime());
             tradeLicense.getTradeLicenseDetail().setId(UUID.randomUUID().toString());
+            tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
+
+            tradeLicense.getTradeLicenseDetail().getAddress().setTenantId(tradeLicense.getTenantId());
+            tradeLicense.getTradeLicenseDetail().getAddress().setId(UUID.randomUUID().toString());
 
             tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
                 accessory.setTenantId(tradeLicense.getTenantId());

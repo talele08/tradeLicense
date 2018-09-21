@@ -14,29 +14,29 @@ serviceMaps:
 
           - jsonPath: $.Licenses.*.tenantId
 
-          - jsonPath: $.Licenses.*.licensetype
+          - jsonPath: $.Licenses.*.licenseType
 
-          - jsonPath: $.Licenses.*.licensenumber
+          - jsonPath: $.Licenses.*.licenseNumber
 
           - jsonPath: $.Licenses.*.applicationNumber
 
-          - jsonPath: $.Licenses.*.oldlicensenumber
+          - jsonPath: $.Licenses.*.oldLicenseNumber
 
-          - jsonPath: $.Licenses.*.propertyid
+          - jsonPath: $.Licenses.*.propertyId
 
-          - jsonPath: $.Licenses.*.oldpropertyid
+          - jsonPath: $.Licenses.*.oldPropertyId
 
-          - jsonPath: $.Licenses.*.applicationdate
+          - jsonPath: $.Licenses.*.applicationDate
 
-          - jsonPath: $.Licenses.*.commencementdate
+          - jsonPath: $.Licenses.*.commencementDate
 
-          - jsonPath: $.Licenses.*.issueddate
+          - jsonPath: $.Licenses.*.issuedDate
 
-          - jsonPath: $.Licenses.*.financialyear
+          - jsonPath: $.Licenses.*.financialYear
 
-          - jsonPath: $.Licenses.*.validfrom
+          - jsonPath: $.Licenses.*.validFrom
 
-          - jsonPath: $.Licenses.*.validto
+          - jsonPath: $.Licenses.*.validTo
 
           - jsonPath: $.Licenses.*.action
 
@@ -57,13 +57,13 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.surveyno
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.surveyNo
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.subownershipcategory
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.subOwnerShipCategory
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.channel
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.additionaldetail
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.additionalDetail
 
           - jsonPath: $.Licenses.*.id
 
@@ -82,13 +82,13 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.tenantid
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.tenantId
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.tradeType
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.uom
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.uomvalue
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.uomValue
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
 
@@ -107,13 +107,13 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.tenantid
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.tenantId
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.accessoryCategory
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.uom
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.uomvalue
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.uomValue
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
 
@@ -131,17 +131,17 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.tenantid
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.tenantId
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.isactive
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.active
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.isprimaryowner
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.isPrimaryOwner
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownertype
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownerType
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownershippercentage
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownerShipPercentage
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.relationship
 
@@ -159,9 +159,9 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.tenantid
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.tenantId
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.documenttype
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.documentType
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.tradecategorydetail
 
@@ -184,9 +184,9 @@ serviceMaps:
          jsonMaps:
           - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.id
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.tenantid
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.tenantId
 
-          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.documenttype
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.documentType
 
           - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.tradecategorydetail
 
