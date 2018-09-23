@@ -184,6 +184,9 @@ public class  TradeLicense   {
         @JsonProperty("tradeLicenseDetail")
         private TradeLicenseDetail tradeLicenseDetail = null;
 
+        @JsonProperty("citizenInfo")
+        private OwnerInfo citizenInfo;
+
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;
 

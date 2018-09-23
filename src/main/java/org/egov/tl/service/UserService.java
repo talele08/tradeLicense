@@ -258,6 +258,52 @@ public class UserService{
     }
 
 
+    public void createCitizen(TradeLicenseRequest request){
+        StringBuilder uriCreate = new StringBuilder(config.getUserHost()).append(config.getUserHost()).append(config.getUserCreateEndpoint());
+        RequestInfo requestInfo = request.getRequestInfo();
+
+        Role role = getCitizenRole();
+        // If user is creating assessment, userInfo object from requestInfo is assigned as citizenInfo
+        if(requestInfo.getUserInfo().getType().equalsIgnoreCase("CITIZEN"))
+        {   request.getLicenses().forEach(license -> {
+                license.setCitizenInfo(new OwnerInfo(requestInfo.getUserInfo()));
+                log.debug("userInfo---> "+requestInfo.getUserInfo().toString());
+           });
+        }
+        else{
+            // In case of employee login it checks if the citizenInfo object is present else it creates it
+            request.getLicenses().forEach(license -> {
+                    addUserDefaultFields(license.getTenantId(),role,license.getCitizenInfo());
+                    // Send MobileNumber as the userName in search
+                    UserDetailResponse userDetailResponse = searchByUserName(license.getCitizenInfo().getMobileNumber(),license.getCitizenInfo().getTenantId());
+                    // If user not present new user is created
+                    if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
+                    {
+                        license.getCitizenInfo().setUserName(license.getCitizenInfo().getMobileNumber());
+                        userDetailResponse = userCall(new CreateUserRequest(requestInfo,license.getCitizenInfo()),uriCreate);
+                        log.info("citizen created --> "+userDetailResponse.getUser().get(0).getUuid());
+                    }
+                    license.setCitizenInfo(userDetailResponse.getUser().get(0));
+                    if(userDetailResponse.getUser().get(0).getUuid()==null){
+                        throw new CustomException("INVALID CITIZENINFO","CitizenInfo cannot have uuid equal to null");
+                    }
+                });
+            }
+
+    }
+
+
+    private UserDetailResponse searchByUserName(String userName,String tenantId){
+        UserSearchRequest userSearchRequest = new UserSearchRequest();
+        userSearchRequest.setUserType("CITIZEN");
+        userSearchRequest.setUserName(userName);
+        userSearchRequest.setTenantId(tenantId);
+        StringBuilder uri = new StringBuilder(config.getUserHost()).append(config.getUserSearchEndpoint());
+        return userCall(userSearchRequest,uri);
+
+    }
+
+
 
 
 

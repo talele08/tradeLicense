@@ -53,6 +53,8 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .lastModifiedTime(lastModifiedTime)
                         .build();
 
+                OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
+
                 currentTradeLicense = TradeLicense.builder().auditDetails(auditdetails)
                         .licenseNumber(rs.getString("licensenumber"))
                         .licenseType(TradeLicense.LicenseTypeEnum.fromValue(rs.getString("licensetype")))
@@ -68,6 +70,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .tenantId(tenantId)
                         .propertyId(rs.getString("propertyid"))
                         .oldPropertyId(rs.getString("oldpropertyid"))
+                        .citizenInfo(citizenInfo)
                         .id(id)
                         .build();
 
@@ -164,6 +167,15 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
             tradeLicense.getTradeLicenseDetail().addAccessoriesItem(accessory);
         }
 
+
+        Document ownerDocument = Document.builder().id(rs.getString("ownerdocid"))
+                .documentType(rs.getString("ownerdocType"))
+                .fileStoreId(rs.getString("ownerfileStoreId"))
+                .documentUid(rs.getString("ownerdocuid"))
+                .build();
+
+
+
         Boolean isPrimaryOwner = (Boolean) rs.getObject("isprimaryowner");
         Double ownerShipPercentage = (Double) rs.getObject("ownershippercentage") ;
 
@@ -174,6 +186,16 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                 .ownerShipPercentage(ownerShipPercentage)
                 .build();
         tradeLicense.getTradeLicenseDetail().addOwnersItem(owner);
+
+        // Add owner document to the specific tradeLicense for which it was used
+        String docuserid = rs.getString("docuserid");
+        String doctradeLicenseDetailId = rs.getString("doctradelicensedetailid");
+        if(tradeLicenseDetailId.equalsIgnoreCase(doctradeLicenseDetailId) && docuserid!=null) {
+            tradeLicense.getTradeLicenseDetail().getOwners().forEach(ownerInfo -> {
+                if (docuserid.equalsIgnoreCase(ownerInfo.getUuid()))
+                    ownerInfo.addDocumentsItem(ownerDocument);
+            });
+        }
 
         if(rs.getString("tl_ap_doc_id")!=null) {
             Document applicationDocument = Document.builder()

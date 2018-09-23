@@ -43,12 +43,12 @@ public class TradeLicenseService {
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
+        userService.createCitizen(tradeLicenseRequest);
         producer.push(config.getSaveTopic(),tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 
     public List<TradeLicense> search(TradeLicenseSearchCriteria criteria, RequestInfo requestInfo){
-
         List<TradeLicense> licenses;
          if(criteria.getMobileNumber()!=null){
              UserDetailResponse userDetailResponse = userService.getUser(criteria,requestInfo);

@@ -62,6 +62,13 @@ public class EnrichmentService {
                 });
             }
 
+            tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                if(!CollectionUtils.isEmpty(owner.getDocuments()))
+                    owner.getDocuments().forEach(document -> {
+                        document.setId(UUID.randomUUID().toString());
+                    });
+            });
+
         });
         setIdgenIds(tradeLicenseRequest);
         boundaryService.getAreaType(tradeLicenseRequest,config.getHierarchyTypeCode());
@@ -139,6 +146,11 @@ public class EnrichmentService {
         licenses.forEach(license -> {
             license.getTradeLicenseDetail().getOwners().forEach(owner -> ownerids.add(owner.getUuid()));
         });
+
+        licenses.forEach(tradeLicense -> {
+            ownerids.add(tradeLicense.getCitizenInfo().getUuid());
+            });
+
         criteria.setOwnerids(ownerids);
     }
 
@@ -154,7 +166,14 @@ public class EnrichmentService {
                     else
                         owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid()));
                  });
-            });
+
+            if(userIdToOwnerMap.get(license.getCitizenInfo().getUuid())!=null)
+                license.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(license.getCitizenInfo().getUuid()));
+            else
+                throw new CustomException("CITIZENINFO ERROR","The citizenInfo of trade License with ApplicationNumber: "+license.getApplicationNumber()+" cannot be found");
+
+        });
+
     }
 
 

@@ -44,7 +44,7 @@ public class OwnerInfo extends User  {
 
         @JsonProperty("documents")
         @Valid
-        private Set<Document> documents;
+        private List<Document> documents;
 
         public enum RelationshipEnum {
                 FATHER("FATHER"),
@@ -80,7 +80,17 @@ public class OwnerInfo extends User  {
 
 
         @Builder
-        public OwnerInfo(Long id, String uuid, String userName, String password, String salutation, String name, String gender, String mobileNumber, String emailId, String altContactNumber, String pan, String aadhaarNumber, String permanentAddress, String permanentCity, String permanentPincode, String correspondenceCity, String correspondencePincode, String correspondenceAddress, Boolean active, Long dob, Long pwdExpiryDate, String locale, String type, String signature, Boolean accountLocked, List<Role> roles, String fatherOrHusbandName, String bloodGroup, String identificationMark, String photo, String createdBy, Long createdDate, String lastModifiedBy, Long lastModifiedDate, String otpReference, String tenantId, Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,String institutionId,Set<Document> documents,RelationshipEnum relationship) {
+        public OwnerInfo(Long id, String uuid, String userName, String password, String salutation, String name,
+                         String gender, String mobileNumber, String emailId, String altContactNumber,
+                         String pan, String aadhaarNumber, String permanentAddress, String permanentCity,
+                         String permanentPincode, String correspondenceCity, String correspondencePincode,
+                         String correspondenceAddress, Boolean active, Long dob, Long pwdExpiryDate,
+                         String locale, String type, String signature, Boolean accountLocked,
+                         List<Role> roles, String fatherOrHusbandName, String bloodGroup,
+                         String identificationMark, String photo, String createdBy, Long createdDate,
+                         String lastModifiedBy, Long lastModifiedDate, String otpReference, String tenantId,
+                         Boolean isPrimaryOwner, Double ownerShipPercentage, String ownerType,
+                         String institutionId,List<Document> documents,RelationshipEnum relationship) {
                 super(id,uuid, userName, password, salutation, name, gender, mobileNumber, emailId, altContactNumber, pan, aadhaarNumber, permanentAddress, permanentCity, permanentPincode, correspondenceCity, correspondencePincode, correspondenceAddress, active, dob, pwdExpiryDate, locale, type, signature, accountLocked, roles, fatherOrHusbandName, bloodGroup, identificationMark, photo, createdBy, createdDate, lastModifiedBy, lastModifiedDate, otpReference, tenantId);
                 this.isPrimaryOwner = isPrimaryOwner;
                 this.ownerShipPercentage = ownerShipPercentage;
@@ -92,9 +102,10 @@ public class OwnerInfo extends User  {
 
         public OwnerInfo addDocumentsItem(Document documentsItem) {
                 if (this.documents == null) {
-                        this.documents = new HashSet<>();
+                        this.documents = new ArrayList<>();
                 }
-                this.documents.add(documentsItem);
+                if(!this.documents.contains(documentsItem))
+                        this.documents.add(documentsItem);
                 return this;
         }
 

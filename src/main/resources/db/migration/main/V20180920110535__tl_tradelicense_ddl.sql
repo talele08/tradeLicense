@@ -1,6 +1,7 @@
 CREATE TABLE eg_tl_TradeLicense(
 
   id character varying(64),
+  accountid character varying(64),
   tenantId character varying(64),
   licenseType character varying(64),
   licenseNumber character varying(64),
@@ -156,6 +157,27 @@ CREATE TABLE eg_tl_owner(
   lastmodifiedtime bigint,
   CONSTRAINT uk_eg_tl_owner PRIMARY KEY (id,tradeLicenseDetailId),
   CONSTRAINT fk_eg_tl_owner FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
+  ON UPDATE CASCADE
+  ON DELETE CASCADE
+);
+
+CREATE TABLE eg_tl_document_owner (
+  tenantId character varying(256),
+  id character varying(64),
+  tradeLicenseDetailId character varying(64),
+  userid character varying(128),
+  documenttype character varying(64),
+  filestoreId character varying(64),
+  isactive boolean,
+  documentuid  character varying(64),
+  createdby character varying(64),
+  createdtime bigint,
+  lastmodifiedby character varying(64),
+  lastmodifiedtime bigint,
+
+  CONSTRAINT pk_eg_tl_document_owner PRIMARY KEY (id),
+  CONSTRAINT uk_eg_tl_document_owner UNIQUE (userid, tradeLicenseDetailId),
+  CONSTRAINT fk_eg_tl_document_owner FOREIGN KEY (userid, tradeLicenseDetailId) REFERENCES eg_tl_owner (id, tradeLicenseDetailId)
   ON UPDATE CASCADE
   ON DELETE CASCADE
 );
