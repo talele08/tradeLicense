@@ -280,3 +280,247 @@ serviceMaps:
           - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
 
 
+
+
+
+
+
+ - version: 1.0
+   description: Update tradeLicense details in EG_TL_TradeLicense  table
+   fromTopic: update-tl-tradelicense
+   isTransaction: true
+   queryMaps:
+
+       - query: UPDATE eg_tl_tradelicense SET accountid = ?,tenantid = ?, licensetype = ?, licensenumber = ?,applicationNumber = ?, oldlicensenumber = ?, propertyid = ?, oldpropertyid = ?, applicationdate = ?, commencementdate = ?, issueddate = ?, financialyear = ?, validfrom = ?, validto = ?, action = ?, status = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id=?;
+         basePath: Licenses.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.citizenInfo.uuid
+
+          - jsonPath: $.Licenses.*.tenantId
+
+          - jsonPath: $.Licenses.*.licensetype
+
+          - jsonPath: $.Licenses.*.licenseNumber
+
+          - jsonPath: $.Licenses.*.applicationNumber
+
+          - jsonPath: $.Licenses.*.oldlicenseNumber
+
+          - jsonPath: $.Licenses.*.propertyId
+
+          - jsonPath: $.Licenses.*.oldPropertyId
+
+          - jsonPath: $.Licenses.*.applicationDate
+
+          - jsonPath: $.Licenses.*.commencementDate
+
+          - jsonPath: $.Licenses.*.issuedDate
+
+          - jsonPath: $.Licenses.*.financialYear
+
+          - jsonPath: $.Licenses.*.validFrom
+
+          - jsonPath: $.Licenses.*.validTo
+
+          - jsonPath: $.Licenses.*.action
+
+          - jsonPath: $.Licenses.*.status
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.id
+
+
+
+       - query: UPDATE eg_tl_tradelicensedetail SET surveyno = ?, subownershipcategory = ?, channel = ?, additionaldetail = ?, tradelicenseid = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.surveyNo
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.subOwnerShipCategory
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.channel
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.additionalDetail
+            type: JSON
+            dbType: JSONB
+
+          - jsonPath: $.Licenses.*.id
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.id
+
+
+       - query: UPDATE eg_tl_tradeunit SET tenantid = ?, tradetype = ?, uom = ?, uomvalue = ?, tradelicensedetailid = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail.tradeUnits.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.tenantId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.tradeType
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.uom
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.uomValue
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.tradeUnits[*].id)].tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.tradeUnits[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.tradeUnits[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.tradeUnits.*.id
+
+
+
+       - query: UPDATE eg_tl_accessory SET tenantid = ?, accessoryCategory = ?, uom = ?, uomvalue = ?, tradelicensedetailid = ?,  lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail.accessories.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.tenantId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.accessoryCategory
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.uom
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.uomValue
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.accessories[*].id)].tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.accessories[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.accessories[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.accessories.*.id
+
+
+       - query: UPDATE eg_tl_owner SET tenantid = ?, tradelicensedetailid = ?, isactive = ?, isprimaryowner = ?, ownertype = ?, ownershippercentage = ?, relationship = ?, lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id = ?;
+         basePath: Licenses.*.tradeLicenseDetail.owners.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.tenantId
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners[*].id)].tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.active
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.isPrimaryOwner
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownerType
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.ownerShipPercentage
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.relationship
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.uuid
+
+
+
+       - query: UPDATE eg_tl_document_owner SET tenantId = ?,userid = ?, tradeLicenseDetailId = ?, documenttype = ?, fileStoreId = ?,documentuid = ?, lastmodifiedby = ?,  lastmodifiedtime = ? WHERE id =?;
+         basePath: Licenses.*.tradeLicenseDetail.owners.*.documents.*
+         jsonMaps:
+           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners.*.documents[*].id)].tenantId
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners[*][?({id} in @.documents[*].id)].uuid
+
+           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners.*.documents[*].id)].tradeLicenseDetail.id
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.documents.*.documentType
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.documents.*.fileStoreId
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.documents.*.documentUid
+
+           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners.*.documents[*].id)].auditDetails.lastModifiedBy
+
+           - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.owners.*.documents[*].id)].auditDetails.lastModifiedTime
+
+           - jsonPath: $.Licenses.*.tradeLicenseDetail.owners.*.documents.*.id
+
+
+
+       - query: UPDATE eg_tl_verificationdocument SET tenantid =?, documenttype =?, tradecategorydetail =?, filestoreid =?, tradelicensedetailid =?, lastmodifiedby =?, lastmodifiedtime =? WHERE id =?;
+         basePath: Licenses.*.tradeLicenseDetail.verificationDocuments.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.tenantId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.documentType
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.tradecategorydetail
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.filestoreId
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.verificationDocuments[*].id)].tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.verificationDocuments[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.verificationDocuments[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.verificationDocuments.*.id
+
+
+
+       - query: UPDATE eg_tl_applicationdocument SET tenantid =?, documenttype =?, tradecategorydetail =?, filestoreid =?, tradelicensedetailid =?, lastmodifiedby =?, lastmodifiedtime =? WHERE id =?;
+         basePath: Licenses.*.tradeLicenseDetail.applicationDocuments.*
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.tenantId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.documentType
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.tradecategorydetail
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.filestoreId
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.applicationDocuments[*].id)].tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.applicationDocuments[*].id)].auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses[*][?({id} in @.tradeLicenseDetail.applicationDocuments[*].id)].auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.applicationDocuments.*.id
+
+
+       - query: UPDATE eg_tl_address SET tenantid =?, doorno =?, latitude =?, longitude =?, addressid =?, addressnumber =?,locality =?, type =?, addressline1 =?, addressline2 =?, landmark =?, city =?, pincode =?, detail =?, tradelicensedetailid =?,lastmodifiedby =?, lastmodifiedtime =? WHERE id =?;
+         basePath: Licenses.*.tradeLicenseDetail.address
+         jsonMaps:
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.tenantId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.doorNo
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.latitude
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.longitude
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressId
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressNumber
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.locality.code
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.type
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.addressline1
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.landmark
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.city
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.pincode
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.detail
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.id
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedBy
+
+          - jsonPath: $.Licenses.*.auditDetails.lastModifiedTime
+
+          - jsonPath: $.Licenses.*.tradeLicenseDetail.address.id

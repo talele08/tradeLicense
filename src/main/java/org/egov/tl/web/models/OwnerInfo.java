@@ -184,6 +184,43 @@ public class OwnerInfo extends User  {
                 return addroles;
         }
 
+        /**
+         * Populates Owner fields from the given User object
+         * @param user User object obtained from user service
+         */
+        public void addUserWithoutAuditDetail(OwnerInfo user){
+                this.setUuid(user.getUuid());
+                this.setId(user.getId());
+                this.setUserName(user.getUserName());
+                this.setPassword(user.getPassword());
+                this.setSalutation(user.getSalutation());
+                this.setName(user.getName());
+                this.setGender(user.getGender());
+                this.setMobileNumber(user.getMobileNumber());
+                this.setEmailId(user.getEmailId());
+                this.setAltContactNumber(user.getAltContactNumber());
+                this.setPan(user.getPan());
+                this.setAadhaarNumber(user.getAadhaarNumber());
+                this.setPermanentAddress(user.getPermanentAddress());
+                this.setPermanentCity(user.getPermanentCity());
+                this.setPermanentPincode(user.getPermanentPincode());
+                this.setCorrespondenceAddress(user.getCorrespondenceAddress());
+                this.setCorrespondenceCity(user.getCorrespondenceCity());
+                this.setCorrespondencePincode(user.getCorrespondencePincode());
+                this.setActive(user.getActive());
+                this.setDob(user.getDob());
+                this.setPwdExpiryDate(user.getPwdExpiryDate());
+                this.setLocale(user.getLocale());
+                this.setType(user.getType());
+                this.setAccountLocked(user.getAccountLocked());
+                this.setRoles(user.getRoles());
+                this.setFatherOrHusbandName(user.getFatherOrHusbandName());
+                this.setBloodGroup(user.getBloodGroup());
+                this.setIdentificationMark(user.getIdentificationMark());
+                this.setPhoto(user.getPhoto());
+                this.setTenantId(user.getTenantId());
+        }
+
 
         @Override
         public boolean equals(Object o) {

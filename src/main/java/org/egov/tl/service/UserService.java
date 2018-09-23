@@ -304,6 +304,34 @@ public class UserService{
     }
 
 
+    /**
+     * Updates user if present else creates new user
+     * @param request TradeLicenseRequest received from update
+     */
+    public void updateUser(TradeLicenseRequest request){
+        List<TradeLicense> licenses = request.getLicenses();
+        RequestInfo requestInfo = request.getRequestInfo();
+        licenses.forEach(license -> {
+                license.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                    UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
+                    StringBuilder uri  = new StringBuilder(config.getUserHost());
+                    if(CollectionUtils.isEmpty(userDetailResponse.getUser())) {
+                        uri = uri.append(config.getUserContextPath()).append(config.getUserCreateEndpoint());
+                        userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
+                    }
+                    else
+                    {   owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
+                        uri=uri.append(config.getUserContextPath()).append(config.getUserUpdateEndpoint());
+                        OwnerInfo user = new OwnerInfo();
+                        user.addUserWithoutAuditDetail(owner);
+                        userDetailResponse = userCall( new CreateUserRequest(requestInfo,user),uri);
+                    }
+                    setOwnerFields(owner,userDetailResponse,requestInfo);
+                });
+            });
+    }
+
+
 
 
 

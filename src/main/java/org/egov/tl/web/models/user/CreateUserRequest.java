@@ -18,7 +18,6 @@ public class CreateUserRequest {
     @JsonProperty("user")
     private OwnerInfo user;
 
-    
 }
 
 

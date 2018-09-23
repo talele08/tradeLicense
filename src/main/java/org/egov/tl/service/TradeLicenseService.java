@@ -81,5 +81,12 @@ public class TradeLicenseService {
         return licenses;
     }
 
+    public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
+        userService.updateUser(tradeLicenseRequest);
+        userService.createCitizen(tradeLicenseRequest);
+        producer.push(config.getUpdateTopic(),tradeLicenseRequest);
+        return tradeLicenseRequest.getLicenses();
+    }
+
 
 }
