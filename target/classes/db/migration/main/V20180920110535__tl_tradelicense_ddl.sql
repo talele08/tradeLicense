@@ -51,6 +51,7 @@ CREATE TABLE eg_tl_TradeUnit(
     uom character varying(64),
     uomValue character varying(64),
     tradeLicenseDetailId character varying(64) NOT NULL,
+    active boolean,
     createdBy character varying(64),
     lastModifiedBy character varying(64),
     createdTime bigint,
@@ -68,6 +69,7 @@ CREATE TABLE eg_tl_Accessory(
     uom character varying(64),
     uomValue character varying(64),
     tradeLicenseDetailId character varying(64),
+    active boolean,
     createdBy character varying(64),
     lastModifiedBy character varying(64),
     createdTime bigint,
@@ -85,6 +87,7 @@ CREATE TABLE eg_tl_ApplicationDocument(
     filestoreid character varying(64),
     tradeCategoryDetail character varying(64),
     tradeLicenseDetailId character varying(64),
+    active boolean,
     createdBy character varying(64),
     lastModifiedBy character varying(64),
     createdTime bigint,
@@ -102,6 +105,7 @@ CREATE TABLE eg_tl_VerificationDocument(
     filestoreid character varying(64),
     tradeCategoryDetail character varying(64),
     tradeLicenseDetailId character varying(64),
+    active boolean,
     createdBy character varying(64),
     lastModifiedBy character varying(64),
     createdTime bigint,
@@ -151,11 +155,14 @@ CREATE TABLE eg_tl_owner(
   ownertype character varying(64),
   ownershippercentage character varying(64),
   relationship character varying(64),
+  active boolean,
+  institutionId character varying(64),
   createdby character varying(64),
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
-  CONSTRAINT uk_eg_tl_owner PRIMARY KEY (id,tradeLicenseDetailId),
+  CONSTRAINT pk_eg_tl_owner PRIMARY KEY (id,tradeLicenseDetailId),
+  CONSTRAINT uk_eg_tl_owner  UNIQUE (id),
   CONSTRAINT fk_eg_tl_owner FOREIGN KEY (tradeLicenseDetailId) REFERENCES eg_tl_TradeLicenseDetail (id)
   ON UPDATE CASCADE
   ON DELETE CASCADE
@@ -168,15 +175,15 @@ CREATE TABLE eg_tl_document_owner (
   userid character varying(128),
   documenttype character varying(64),
   filestoreId character varying(64),
-  isactive boolean,
+  active boolean,
   documentuid  character varying(64),
   createdby character varying(64),
   createdtime bigint,
   lastmodifiedby character varying(64),
   lastmodifiedtime bigint,
 
-  CONSTRAINT pk_eg_tl_document_owner PRIMARY KEY (id),
-  CONSTRAINT uk_eg_tl_document_owner UNIQUE (userid, tradeLicenseDetailId),
+  CONSTRAINT uk_eg_tl_document_owner PRIMARY KEY (id),
+  CONSTRAINT pk_eg_tl_document_owner UNIQUE (userid, tradeLicenseDetailId),
   CONSTRAINT fk_eg_tl_document_owner FOREIGN KEY (userid, tradeLicenseDetailId) REFERENCES eg_tl_owner (id, tradeLicenseDetailId)
   ON UPDATE CASCADE
   ON DELETE CASCADE

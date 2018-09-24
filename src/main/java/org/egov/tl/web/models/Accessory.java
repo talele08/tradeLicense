@@ -32,6 +32,9 @@ public class Accessory   {
         @JsonProperty("tenantId")
         private String tenantId = null;
 
+        @JsonProperty("active")
+        private Boolean active;
+
         @JsonProperty("accessoryCategory")
         private String accessoryCategory = null;
 

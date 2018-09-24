@@ -1,8 +1,7 @@
 package org.egov.tl.service;
 
-import org.apache.catalina.util.TLSUtil;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tl.config.TlConfiguration;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.IdGenRepository;
 import org.egov.tl.util.TradeUtil;
 import org.egov.tl.web.models.*;
@@ -20,12 +19,12 @@ import java.util.stream.Collectors;
 public class EnrichmentService {
 
     private IdGenRepository idGenRepository;
-    private TlConfiguration config;
+    private TLConfiguration config;
     private TradeUtil tradeUtil;
     private BoundaryService boundaryService;
 
     @Autowired
-    public EnrichmentService(IdGenRepository idGenRepository, TlConfiguration config, TradeUtil tradeUtil, BoundaryService boundaryService) {
+    public EnrichmentService(IdGenRepository idGenRepository, TLConfiguration config, TradeUtil tradeUtil, BoundaryService boundaryService) {
         this.idGenRepository = idGenRepository;
         this.config = config;
         this.tradeUtil = tradeUtil;
@@ -48,29 +47,35 @@ public class EnrichmentService {
             tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
                 accessory.setTenantId(tradeLicense.getTenantId());
                 accessory.setId(UUID.randomUUID().toString());
+                accessory.setActive(true);
             });
 
             tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
                 tradeUnit.setTenantId(tradeLicense.getTenantId());
                 tradeUnit.setId(UUID.randomUUID().toString());
+                tradeUnit.setActive(true);
             });
 
             if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY))
             {
                 tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
                     document.setId(UUID.randomUUID().toString());
+                    document.setActive(true);
                 });
             }
 
             tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                owner.setActive(true);
                 if(!CollectionUtils.isEmpty(owner.getDocuments()))
                     owner.getDocuments().forEach(document -> {
                         document.setId(UUID.randomUUID().toString());
+                        document.setActive(true);
                     });
             });
 
         });
         setIdgenIds(tradeLicenseRequest);
+        setStatusForCreate(tradeLicenseRequest);
         boundaryService.getAreaType(tradeLicenseRequest,config.getHierarchyTypeCode());
     }
 
@@ -147,9 +152,9 @@ public class EnrichmentService {
             license.getTradeLicenseDetail().getOwners().forEach(owner -> ownerids.add(owner.getUuid()));
         });
 
-        licenses.forEach(tradeLicense -> {
+      /*  licenses.forEach(tradeLicense -> {
             ownerids.add(tradeLicense.getCitizenInfo().getUuid());
-            });
+            });*/
 
         criteria.setOwnerids(ownerids);
     }
@@ -167,13 +172,22 @@ public class EnrichmentService {
                         owner.addUserDetail(userIdToOwnerMap.get(owner.getUuid()));
                  });
 
-            if(userIdToOwnerMap.get(license.getCitizenInfo().getUuid())!=null)
+           /* if(userIdToOwnerMap.get(license.getCitizenInfo().getUuid())!=null)
                 license.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(license.getCitizenInfo().getUuid()));
             else
                 throw new CustomException("CITIZENINFO ERROR","The citizenInfo of trade License with ApplicationNumber: "+license.getApplicationNumber()+" cannot be found");
-
+*/
         });
+    }
 
+
+    private void setStatusForCreate(TradeLicenseRequest tradeLicenseRequest){
+        tradeLicenseRequest.getLicenses().forEach(license -> {
+            if(license.getAction().equals(TradeLicense.ActionEnum.INITIATE))
+                license.setStatus(TradeLicense.StatusEnum.INITIATED);
+            if(license.getAction().equals(TradeLicense.ActionEnum.APPLY))
+                license.setStatus(TradeLicense.StatusEnum.APPLIED);
+        });
     }
 
 
@@ -181,42 +195,88 @@ public class EnrichmentService {
         RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
         AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getName(), false);
         tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
-            tradeLicense.setAuditDetails(auditDetails);
-            tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
+            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)
+                    || tradeLicense.getAction().equals(TradeLicense.ActionEnum.INITIATE)) {
+                tradeLicense.setAuditDetails(auditDetails);
+                tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
 
-            tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
-                if(accessory.getId()==null){
-                    accessory.setTenantId(tradeLicense.getTenantId());
-                    accessory.setId(UUID.randomUUID().toString());
+                tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
+                    if (accessory.getId() == null) {
+                        accessory.setTenantId(tradeLicense.getTenantId());
+                        accessory.setId(UUID.randomUUID().toString());
+                        accessory.setActive(true);
+                    }
+                });
+
+                tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
+                    if (tradeUnit.getId() == null) {
+                        tradeUnit.setTenantId(tradeLicense.getTenantId());
+                        tradeUnit.setId(UUID.randomUUID().toString());
+                        tradeUnit.setActive(true);
+                    }
+                });
+
+                if (tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY)) {
+                    tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
+                        if (document.getId() == null)
+                        {document.setId(UUID.randomUUID().toString());
+                            document.setActive(true);}
+                    });
                 }
-            });
 
-            tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
-                if(tradeUnit.getId()==null){
-                    tradeUnit.setTenantId(tradeLicense.getTenantId());
-                    tradeUnit.setId(UUID.randomUUID().toString());
-                }
-            });
-
-            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY))
-            {
-                tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
-                    if(document.getId()==null)
-                        document.setId(UUID.randomUUID().toString());
+                tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                    if (!CollectionUtils.isEmpty(owner.getDocuments()))
+                        owner.getDocuments().forEach(document -> {
+                            if (document.getId() == null) {
+                                document.setId(UUID.randomUUID().toString());
+                                document.setActive(true);
+                            }
+                        });
                 });
             }
-
-            tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                if(!CollectionUtils.isEmpty(owner.getDocuments()))
-                    owner.getDocuments().forEach(document -> {
-                        if(document.getId()!=null)
+            else {
+                if(!CollectionUtils.isEmpty(tradeLicense.getTradeLicenseDetail().getVerificationDocuments())){
+                    tradeLicense.getTradeLicenseDetail().getVerificationDocuments().forEach(document -> {
+                        if(document.getId()==null){
                             document.setId(UUID.randomUUID().toString());
+                            document.setActive(true);
+                        }
                     });
-            });
-
+                }
+            }
         });
-
+        setLicenseNumber(tradeLicenseRequest);
     }
+
+    private void setLicenseNumber(TradeLicenseRequest request) {
+        RequestInfo requestInfo = request.getRequestInfo();
+        String tenantId = request.getLicenses().get(0).getTenantId();
+        List<TradeLicense> licenses = request.getLicenses();
+        int count=0;
+        for(TradeLicense license : licenses){
+           if(license.getAction().equals(TradeLicense.ActionEnum.APPROVE))
+               count++;
+        }
+        if(count!=0) {
+            List<String> licenseNumbers = getIdList(requestInfo, tenantId, config.getLicenseNumberIdgenName(), config.getLicenseNumberIdgenFormat(), count);
+            ListIterator<String> itr = licenseNumbers.listIterator();
+
+            Map<String, String> errorMap = new HashMap<>();
+            if (licenseNumbers.size() != count) {
+                errorMap.put("IDGEN ERROR ", "The number of LicenseNumber returned by idgen is not equal to number of TradeLicenses");
+            }
+
+            if (!errorMap.isEmpty())
+                throw new CustomException(errorMap);
+
+            licenses.forEach(license -> {
+                if (license.getAction().equals(TradeLicense.ActionEnum.APPROVE))
+                    license.setLicenseNumber(itr.next());
+            });
+        }
+    }
+
+
 
 
 

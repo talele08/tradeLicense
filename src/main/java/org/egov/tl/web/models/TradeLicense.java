@@ -113,7 +113,9 @@ public class  TradeLicense   {
     
     APPROVE("APPROVE"),
     
-    REJECT("REJECT");
+    REJECT("REJECT"),
+
+    CANCEL("CANCEL");
 
     private String value;
 
@@ -153,7 +155,9 @@ public class  TradeLicense   {
     
     APPROVED("APPROVED"),
     
-    REJECTED("REJECTED");
+    REJECTED("REJECTED"),
+
+    CANCELED("CANCELED");
 
     private String value;
 
@@ -184,8 +188,8 @@ public class  TradeLicense   {
         @JsonProperty("tradeLicenseDetail")
         private TradeLicenseDetail tradeLicenseDetail = null;
 
-        @JsonProperty("citizenInfo")
-        private OwnerInfo citizenInfo;
+       /* @JsonProperty("citizenInfo")
+        private OwnerInfo citizenInfo;*/
 
         @JsonProperty("auditDetails")
         private AuditDetails auditDetails = null;

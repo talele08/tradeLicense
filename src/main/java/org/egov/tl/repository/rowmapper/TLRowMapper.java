@@ -53,13 +53,12 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .lastModifiedTime(lastModifiedTime)
                         .build();
 
-                OwnerInfo citizenInfo = OwnerInfo.builder().uuid(rs.getString("accountId")).build();
-
                 currentTradeLicense = TradeLicense.builder().auditDetails(auditdetails)
                         .licenseNumber(rs.getString("licensenumber"))
                         .licenseType(TradeLicense.LicenseTypeEnum.fromValue(rs.getString("licensetype")))
                         .oldLicenseNumber(rs.getString("oldlicensenumber"))
                         .applicationDate(applicationDate)
+                        .applicationNumber(rs.getString("applicationnumber"))
                         .commencementDate(commencementDate)
                         .issuedDate(issuedDate)
                         .financialYear(rs.getString("financialyear"))
@@ -70,7 +69,6 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                         .tenantId(tenantId)
                         .propertyId(rs.getString("propertyid"))
                         .oldPropertyId(rs.getString("oldpropertyid"))
-                        .citizenInfo(citizenInfo)
                         .id(id)
                         .build();
 
@@ -145,24 +143,26 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
             }
         }
 
-        if(rs.getString("tl_un_id")!=null){
+        if(rs.getString("tl_un_id")!=null && rs.getBoolean("tl_un_active")){
             TradeUnit tradeUnit = TradeUnit.builder()
                     .tradeType(rs.getString("tl_un_tradeType"))
                     .uom(rs.getString("tl_un_uom"))
                     .id(rs.getString("tl_un_id"))
                     .uomValue(rs.getString("tl_un_uomvalue"))
                     .tenantId(tenantId)
+                    .active(rs.getBoolean("tl_un_active"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addTradeUnitsItem(tradeUnit);
         }
 
-        if(rs.getString("tl_acc_id")!=null) {
+        if(rs.getString("tl_acc_id")!=null && rs.getBoolean("tl_acc_active")) {
             Accessory accessory = Accessory.builder()
                     .accessoryCategory(rs.getString("accessoryCategory"))
                     .uom(rs.getString("tl_acc_uom"))
                     .id(rs.getString("tl_acc_id"))
                     .uomValue(rs.getString("tl_acc_uomvalue"))
                     .tenantId(tenantId)
+                    .active(rs.getBoolean("tl_acc_active"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addAccessoriesItem(accessory);
         }
@@ -172,6 +172,7 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
                 .documentType(rs.getString("ownerdocType"))
                 .fileStoreId(rs.getString("ownerfileStoreId"))
                 .documentUid(rs.getString("ownerdocuid"))
+                .active(rs.getBoolean("ownerdocactive"))
                 .build();
 
 
@@ -179,40 +180,46 @@ public class TLRowMapper  implements ResultSetExtractor<List<TradeLicense>> {
         Boolean isPrimaryOwner = (Boolean) rs.getObject("isprimaryowner");
         Double ownerShipPercentage = (Double) rs.getObject("ownershippercentage") ;
 
-        OwnerInfo owner = OwnerInfo.builder()
-                .uuid(rs.getString("userid"))
-                .isPrimaryOwner(isPrimaryOwner)
-                .ownerType(rs.getString("ownerType"))
-                .ownerShipPercentage(ownerShipPercentage)
-                .build();
-        tradeLicense.getTradeLicenseDetail().addOwnersItem(owner);
+        if(rs.getBoolean("useractive"))
+        {   OwnerInfo owner = OwnerInfo.builder()
+                    .uuid(rs.getString("userid"))
+                    .isPrimaryOwner(isPrimaryOwner)
+                    .ownerType(rs.getString("ownerType"))
+                    .ownerShipPercentage(ownerShipPercentage)
+                    .active(rs.getBoolean("useractive"))
+                    .build();
+            tradeLicense.getTradeLicenseDetail().addOwnersItem(owner);
+        }
 
         // Add owner document to the specific tradeLicense for which it was used
         String docuserid = rs.getString("docuserid");
         String doctradeLicenseDetailId = rs.getString("doctradelicensedetailid");
-        if(tradeLicenseDetailId.equalsIgnoreCase(doctradeLicenseDetailId) && docuserid!=null) {
+        if(tradeLicenseDetailId.equalsIgnoreCase(doctradeLicenseDetailId) && docuserid!=null
+                && rs.getBoolean("ownerdocactive") && rs.getBoolean("useractive")) {
             tradeLicense.getTradeLicenseDetail().getOwners().forEach(ownerInfo -> {
                 if (docuserid.equalsIgnoreCase(ownerInfo.getUuid()))
                     ownerInfo.addDocumentsItem(ownerDocument);
             });
         }
 
-        if(rs.getString("tl_ap_doc_id")!=null) {
+        if(rs.getString("tl_ap_doc_id")!=null && rs.getBoolean("tl_ap_doc_active")) {
             Document applicationDocument = Document.builder()
                     .documentType(rs.getString("tl_ap_doc_documenttype"))
                     .fileStoreId(rs.getString("tl_ap_doc_filestoreid"))
                     .id(rs.getString("tl_ap_doc_id"))
                     .tenantId(tenantId)
+                    .active(rs.getBoolean("tl_ap_doc_active"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addApplicationDocumentsItem(applicationDocument);
         }
 
-        if(rs.getString("tl_ver_doc_id")!=null) {
+        if(rs.getString("tl_ver_doc_id")!=null && rs.getBoolean("tl_ver_doc_active")) {
             Document verificationDocument = Document.builder()
                     .documentType(rs.getString("tl_ver_doc_documenttype"))
                     .fileStoreId(rs.getString("tl_ver_doc_filestoreid"))
                     .id(rs.getString("tl_ver_doc_id"))
                     .tenantId(tenantId)
+                    .active(rs.getBoolean("tl_ver_doc_active"))
                     .build();
             tradeLicense.getTradeLicenseDetail().addVerificationDocumentsItem(verificationDocument);
         }

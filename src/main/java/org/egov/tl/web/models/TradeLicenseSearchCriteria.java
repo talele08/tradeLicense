@@ -21,7 +21,7 @@ public class TradeLicenseSearchCriteria {
     private int pageNumber;
 
     @JsonProperty("status")
-    private Boolean status;
+    private String status;
 
     @JsonProperty("ids")
     private List<String> ids;
@@ -40,6 +40,9 @@ public class TradeLicenseSearchCriteria {
 
     @JsonProperty("mobileNumber")
     private String mobileNumber;
+
+    @JsonProperty("accountId")
+    private String accountId;
 
     @JsonProperty("offset")
     private String offset;

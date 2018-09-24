@@ -42,6 +42,9 @@ public class OwnerInfo extends User  {
         @Valid
         private List<Document> documents;
 
+        @JsonProperty("active")
+        private Boolean active;
+
         public enum RelationshipEnum {
                 FATHER("FATHER"),
 

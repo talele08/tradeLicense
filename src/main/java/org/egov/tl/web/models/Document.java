@@ -29,6 +29,9 @@ public class Document   {
         @JsonProperty("id")
         private String id;
 
+        @JsonProperty("active")
+        private Boolean active;
+
         @JsonProperty("tenantId")
         private String tenantId = null;
 

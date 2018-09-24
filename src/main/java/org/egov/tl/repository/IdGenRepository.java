@@ -2,14 +2,13 @@ package org.egov.tl.repository;
 
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tl.config.TlConfiguration;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.web.models.Idgen.IdGenerationRequest;
 import org.egov.tl.web.models.Idgen.IdGenerationResponse;
 import org.egov.tl.web.models.Idgen.IdRequest;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -26,10 +25,10 @@ public class IdGenRepository {
 
     private RestTemplate restTemplate;
 
-    private TlConfiguration config;
+    private TLConfiguration config;
 
     @Autowired
-    public IdGenRepository(RestTemplate restTemplate, TlConfiguration config) {
+    public IdGenRepository(RestTemplate restTemplate, TLConfiguration config) {
         this.restTemplate = restTemplate;
         this.config = config;
     }

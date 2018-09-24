@@ -1,14 +1,16 @@
 package org.egov.tl.service;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.tl.config.TlConfiguration;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.producer.Producer;
 import org.egov.tl.repository.TLRepository;
+import org.egov.tl.validator.TLValidator;
 import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.web.models.user.UserDetailResponse;
 import org.egov.tl.workflow.ActionValidator;
+import org.egov.tl.workflow.TLWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,34 +22,38 @@ public class TradeLicenseService {
 
     private EnrichmentService enrichmentService;
 
-    private Producer producer;
-
-    private TlConfiguration config;
-
     private UserService userService;
 
     private TLRepository repository;
 
     private ActionValidator actionValidator;
 
+    private TLValidator tlValidator;
+
+    private TLWorkflowService workflowService;
+
 
     @Autowired
-    public TradeLicenseService(EnrichmentService enrichmentService, Producer producer, TlConfiguration config, UserService userService, TLRepository repository, ActionValidator actionValidator) {
+    public TradeLicenseService(EnrichmentService enrichmentService, UserService userService,
+                               TLRepository repository, ActionValidator actionValidator,
+                               TLValidator tlValidator, TLWorkflowService workflowService) {
         this.enrichmentService = enrichmentService;
-        this.producer = producer;
-        this.config = config;
         this.userService = userService;
         this.repository = repository;
         this.actionValidator = actionValidator;
+        this.tlValidator = tlValidator;
+        this.workflowService = workflowService;
     }
+
+
+
 
 
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
         actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
-        userService.createCitizen(tradeLicenseRequest);
-        producer.push(config.getSaveTopic(),tradeLicenseRequest);
+        repository.save(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 
@@ -83,12 +89,14 @@ public class TradeLicenseService {
         return licenses;
     }
 
+
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
+        tlValidator.validateUpdate(tradeLicenseRequest);
         actionValidator.validateUpdateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
-        userService.updateUser(tradeLicenseRequest);
-        userService.createCitizen(tradeLicenseRequest);
-        producer.push(config.getUpdateTopic(),tradeLicenseRequest);
+        workflowService.updateStatus(tradeLicenseRequest);
+        userService.createUser(tradeLicenseRequest);
+        repository.update(tradeLicenseRequest);
         return tradeLicenseRequest.getLicenses();
     }
 

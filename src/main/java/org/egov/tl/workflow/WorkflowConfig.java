@@ -1,23 +1,25 @@
 package org.egov.tl.workflow;
 
+import org.egov.tl.web.models.TradeLicense;
+
 import java.util.Collections;
 import java.util.*;
 
 public class WorkflowConfig {
 
 
-    public static String ACTION_INITIATE = "INITIATE";
-    public static String ACTION_APPLY = "APPLY";
-    public static String ACTION_APPROVE = "APPROVE";
-    public static String ACTION_REJECT = "REJECT";
-    public static String ACTION_CANCEL = "CANCEL";
+    public static String ACTION_INITIATE = TradeLicense.ActionEnum.INITIATE.toString();
+    public static String ACTION_APPLY = TradeLicense.ActionEnum.APPLY.toString();
+    public static String ACTION_APPROVE = TradeLicense.ActionEnum.APPROVE.toString();
+    public static String ACTION_REJECT = TradeLicense.ActionEnum.REJECT.toString();
+    public static String ACTION_CANCEL = TradeLicense.ActionEnum.CANCEL.toString();
 
-    public static String STATUS_INITIALIZED = "INITIALIZED";
-    public static String STATUS_APPLIED = "APPLIED";
-    public static String STATUS_PAID = "PAID";
-    public static String STATUS_APPROVED = "APPROVED";
-    public static String STATUS_REJECTED = "REJECTED";
-    public static String STATUS_CANCELLED = "CANCELLED";
+    public static String STATUS_INITIALIZED = TradeLicense.StatusEnum.INITIATED.toString();
+    public static String STATUS_APPLIED = TradeLicense.StatusEnum.APPLIED.toString();
+    public static String STATUS_PAID = TradeLicense.StatusEnum.PAID.toString();
+    public static String STATUS_APPROVED = TradeLicense.StatusEnum.APPROVED.toString();
+    public static String STATUS_REJECTED = TradeLicense.StatusEnum.REJECTED.toString();
+    public static String STATUS_CANCELLED = TradeLicense.StatusEnum.CANCELED.toString();
 
     public static String ROLE_CITIZEN = "CITIZEN";
     public static String ROLE_EMPLOYEE = "EMPLOYEE";
@@ -55,7 +57,7 @@ public class WorkflowConfig {
         Map<String, List<String>> map = new HashMap<>();
 
         map.put(ROLE_CITIZEN, Arrays.asList(ACTION_APPLY, ACTION_INITIATE));
-        map.put(ROLE_EMPLOYEE, Arrays.asList(ACTION_APPLY, ACTION_INITIATE,ACTION_APPROVE, ACTION_REJECT));
+        map.put(ROLE_EMPLOYEE, Arrays.asList(ACTION_APPLY, ACTION_INITIATE,ACTION_APPROVE, ACTION_REJECT,ACTION_CANCEL));
 
         roleActionMap = Collections.unmodifiableMap(map);
     }
@@ -64,8 +66,8 @@ public class WorkflowConfig {
 
         Map<String, List<String>> map = new HashMap<>();
 
-        map.put(STATUS_INITIALIZED, Arrays.asList(ACTION_APPLY));
-        map.put(STATUS_APPLIED, Arrays.asList()); // FIXME PUT THE ACTIONS IN PLACE
+        map.put(STATUS_INITIALIZED, Arrays.asList(ACTION_APPLY,ACTION_INITIATE));
+        map.put(STATUS_APPLIED, Arrays.asList(ACTION_APPLY,ACTION_APPROVE, ACTION_REJECT)); // FIXME PUT THE ACTIONS IN PLACE
         map.put(STATUS_PAID, Arrays.asList(ACTION_APPROVE, ACTION_REJECT));
         map.put(STATUS_APPROVED, Arrays.asList(ACTION_CANCEL));
         map.put(STATUS_REJECTED, Arrays.asList()); // FIXME PUT THE ACTIONS IN PLACE

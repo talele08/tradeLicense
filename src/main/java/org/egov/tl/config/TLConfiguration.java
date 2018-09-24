@@ -21,7 +21,7 @@ import java.util.TimeZone;
 @NoArgsConstructor
 @Builder
 @Component
-public class TlConfiguration {
+public class TLConfiguration {
 
 
     @Value("${app.timezone}")
@@ -88,6 +88,9 @@ public class TlConfiguration {
 
     @Value("${persister.update.tradelicense.topic}")
     private String updateTopic;
+
+    @Value("${persister.update.tradelicense.workflow.topic}")
+    private String updateWorkflowTopic;
 
 
     //Location Config

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import lombok.extern.slf4j.Slf4j;
-import org.egov.tl.config.TlConfiguration;
+import org.egov.tl.config.TLConfiguration;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.Boundary;
 import org.egov.tl.web.models.TradeLicenseRequest;
@@ -27,10 +27,10 @@ public class BoundaryService {
 
     private ObjectMapper mapper;
 
-    private TlConfiguration config;
+    private TLConfiguration config;
 
     @Autowired
-    public BoundaryService(ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper, TlConfiguration config) {
+    public BoundaryService(ServiceRequestRepository serviceRequestRepository, ObjectMapper mapper, TLConfiguration config) {
         this.serviceRequestRepository = serviceRequestRepository;
         this.mapper = mapper;
         this.config = config;

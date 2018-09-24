@@ -32,6 +32,9 @@ public class TradeUnit   {
         @JsonProperty("tenantId")
         private String tenantId = null;
 
+        @JsonProperty("active")
+        private Boolean active;
+
         @JsonProperty("tradeType")
         private String tradeType = null;
 
