@@ -5,13 +5,9 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import java.time.LocalDate;
 
 import lombok.*;
-import org.egov.tl.web.models.Role;
-import org.egov.tl.web.models.User;
+import org.egov.common.contract.request.Role;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -114,6 +110,7 @@ public class OwnerInfo extends User  {
          * @param user User object obtained from user service
          */
         public void addUserDetail(User user){
+                this.setId(user.getId());
                 this.setLastModifiedDate(user.getLastModifiedDate());
                 this.setLastModifiedBy(user.getLastModifiedBy());
                 this.setCreatedBy(user.getCreatedBy());

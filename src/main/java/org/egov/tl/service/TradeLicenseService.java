@@ -8,6 +8,7 @@ import org.egov.tl.web.models.TradeLicense;
 import org.egov.tl.web.models.TradeLicenseRequest;
 import org.egov.tl.web.models.TradeLicenseSearchCriteria;
 import org.egov.tl.web.models.user.UserDetailResponse;
+import org.egov.tl.workflow.ActionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,20 +28,22 @@ public class TradeLicenseService {
 
     private TLRepository repository;
 
+    private ActionValidator actionValidator;
+
 
     @Autowired
-    public TradeLicenseService(EnrichmentService enrichmentService, Producer producer, TlConfiguration config,
-                               UserService userService, TLRepository repository) {
+    public TradeLicenseService(EnrichmentService enrichmentService, Producer producer, TlConfiguration config, UserService userService, TLRepository repository, ActionValidator actionValidator) {
         this.enrichmentService = enrichmentService;
         this.producer = producer;
         this.config = config;
         this.userService = userService;
         this.repository = repository;
+        this.actionValidator = actionValidator;
     }
 
 
-
     public List<TradeLicense> create(TradeLicenseRequest tradeLicenseRequest){
+        actionValidator.validateCreateRequest(tradeLicenseRequest);
         enrichmentService.enrichTLCreateRequest(tradeLicenseRequest);
         userService.createUser(tradeLicenseRequest);
         userService.createCitizen(tradeLicenseRequest);
@@ -56,7 +59,6 @@ public class TradeLicenseService {
              if(userDetailResponse.getUser().size()==0){
                  return Collections.emptyList();
              }
-
              enrichmentService.enrichTLCriteriaWithOwnerids(criteria,userDetailResponse);
              licenses = repository.getLicenses(criteria);
              // If property not found with given propertyId or oldPropertyId or address fields return empty list
@@ -82,6 +84,8 @@ public class TradeLicenseService {
     }
 
     public List<TradeLicense> update(TradeLicenseRequest tradeLicenseRequest){
+        actionValidator.validateUpdateRequest(tradeLicenseRequest);
+        enrichmentService.enrichTLUpdateRequest(tradeLicenseRequest);
         userService.updateUser(tradeLicenseRequest);
         userService.createCitizen(tradeLicenseRequest);
         producer.push(config.getUpdateTopic(),tradeLicenseRequest);

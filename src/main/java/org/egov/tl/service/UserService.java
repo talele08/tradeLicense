@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.contract.request.Role;
 import org.egov.tl.config.TlConfiguration;
 import org.egov.tl.repository.ServiceRequestRepository;
 import org.egov.tl.web.models.*;
@@ -313,22 +314,36 @@ public class UserService{
         RequestInfo requestInfo = request.getRequestInfo();
         licenses.forEach(license -> {
                 license.getTradeLicenseDetail().getOwners().forEach(owner -> {
-                    UserDetailResponse userDetailResponse = userExists(owner,requestInfo);
+                    UserDetailResponse userDetailResponse = isUserUpdatable(owner,requestInfo);
+                    OwnerInfo user = new OwnerInfo();
                     StringBuilder uri  = new StringBuilder(config.getUserHost());
                     if(CollectionUtils.isEmpty(userDetailResponse.getUser())) {
                         uri = uri.append(config.getUserContextPath()).append(config.getUserCreateEndpoint());
-                        userDetailResponse = userCall( new CreateUserRequest(requestInfo,owner),uri);
+                        user.addUserWithoutAuditDetail(owner);
+                        user.setUserName(owner.getMobileNumber());
                     }
                     else
                     {   owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
                         uri=uri.append(config.getUserContextPath()).append(config.getUserUpdateEndpoint());
-                        OwnerInfo user = new OwnerInfo();
                         user.addUserWithoutAuditDetail(owner);
-                        userDetailResponse = userCall( new CreateUserRequest(requestInfo,user),uri);
                     }
+                    userDetailResponse = userCall( new CreateUserRequest(requestInfo,user),uri);
                     setOwnerFields(owner,userDetailResponse,requestInfo);
                 });
             });
+    }
+
+
+    private UserDetailResponse isUserUpdatable(OwnerInfo owner,RequestInfo requestInfo){
+        UserSearchRequest userSearchRequest =new UserSearchRequest();
+        userSearchRequest.setTenantId(owner.getTenantId());
+        userSearchRequest.setMobileNumber(owner.getMobileNumber());
+        userSearchRequest.setUuid(Collections.singletonList(owner.getUuid()));
+        userSearchRequest.setRequestInfo(requestInfo);
+        userSearchRequest.setActive(true);
+        userSearchRequest.setUserType(owner.getType());
+        StringBuilder uri = new StringBuilder(config.getUserHost()).append(config.getUserSearchEndpoint());
+        return userCall(userSearchRequest,uri);
     }
 
 

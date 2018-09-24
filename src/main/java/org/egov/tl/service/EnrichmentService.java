@@ -55,7 +55,7 @@ public class EnrichmentService {
                 tradeUnit.setId(UUID.randomUUID().toString());
             });
 
-            if(tradeLicense.getStatus().equals(TradeLicense.StatusEnum.APPLIED))
+            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY))
             {
                 tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
                     document.setId(UUID.randomUUID().toString());
@@ -171,6 +171,48 @@ public class EnrichmentService {
                 license.getCitizenInfo().addCitizenDetail(userIdToOwnerMap.get(license.getCitizenInfo().getUuid()));
             else
                 throw new CustomException("CITIZENINFO ERROR","The citizenInfo of trade License with ApplicationNumber: "+license.getApplicationNumber()+" cannot be found");
+
+        });
+
+    }
+
+
+    public void enrichTLUpdateRequest(TradeLicenseRequest tradeLicenseRequest){
+        RequestInfo requestInfo = tradeLicenseRequest.getRequestInfo();
+        AuditDetails auditDetails = tradeUtil.getAuditDetails(requestInfo.getUserInfo().getName(), false);
+        tradeLicenseRequest.getLicenses().forEach(tradeLicense -> {
+            tradeLicense.setAuditDetails(auditDetails);
+            tradeLicense.getTradeLicenseDetail().setAuditDetails(auditDetails);
+
+            tradeLicense.getTradeLicenseDetail().getAccessories().forEach(accessory -> {
+                if(accessory.getId()==null){
+                    accessory.setTenantId(tradeLicense.getTenantId());
+                    accessory.setId(UUID.randomUUID().toString());
+                }
+            });
+
+            tradeLicense.getTradeLicenseDetail().getTradeUnits().forEach(tradeUnit -> {
+                if(tradeUnit.getId()==null){
+                    tradeUnit.setTenantId(tradeLicense.getTenantId());
+                    tradeUnit.setId(UUID.randomUUID().toString());
+                }
+            });
+
+            if(tradeLicense.getAction().equals(TradeLicense.ActionEnum.APPLY))
+            {
+                tradeLicense.getTradeLicenseDetail().getApplicationDocuments().forEach(document -> {
+                    if(document.getId()==null)
+                        document.setId(UUID.randomUUID().toString());
+                });
+            }
+
+            tradeLicense.getTradeLicenseDetail().getOwners().forEach(owner -> {
+                if(!CollectionUtils.isEmpty(owner.getDocuments()))
+                    owner.getDocuments().forEach(document -> {
+                        if(document.getId()!=null)
+                            document.setId(UUID.randomUUID().toString());
+                    });
+            });
 
         });
 
