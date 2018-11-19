@@ -6,8 +6,8 @@ import org.egov.tlcalculator.config.TLCalculatorConfigs;
 import org.egov.tlcalculator.repository.ServiceRequestRepository;
 import org.egov.tlcalculator.web.models.AuditDetails;
 import org.egov.tlcalculator.web.models.RequestInfoWrapper;
-import org.egov.tlcalculator.web.models.TL.TradeLicense;
-import org.egov.tlcalculator.web.models.TL.TradeLicenseResponse;
+import org.egov.tlcalculator.web.models.tradelicense.TradeLicense;
+import org.egov.tlcalculator.web.models.tradelicense.TradeLicenseResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,6 +40,37 @@ public class CalculationUtils {
       url.append("{2}");
       return url.toString();
   }
+
+    public String getDemandSearchURL(){
+        StringBuilder url = new StringBuilder(config.getBillingHost());
+        url.append(config.getDemandSearchEndpoint());
+        url.append("?");
+        url.append("tenantId=");
+        url.append("{1}");
+        url.append("&");
+        url.append("businessService=");
+        url.append("{2}");
+        url.append("&");
+        url.append("consumerCode=");
+        url.append("{3}");
+        return url.toString();
+    }
+
+    public String getBillGenerateURI(){
+        StringBuilder url = new StringBuilder(config.getBillingHost());
+        url.append(config.getBillGenerateEndpoint());
+        url.append("?");
+        url.append("tenantId=");
+        url.append("{1}");
+        url.append("&");
+        url.append("consumerCode=");
+        url.append("{2}");
+        url.append("&");
+        url.append("businessService=");
+        url.append("{3}");
+
+        return url.toString();
+    }
 
     public AuditDetails getAuditDetails(String by, Boolean isCreate) {
         Long time = System.currentTimeMillis();

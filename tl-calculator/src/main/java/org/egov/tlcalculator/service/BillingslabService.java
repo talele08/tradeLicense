@@ -8,12 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.tlcalculator.config.BillingSlabConfigs;
 import org.egov.tlcalculator.kafka.broker.TLCalculatorProducer;
-import org.egov.tlcalculator.repository.BillingslabQueryBuilder;
+import org.egov.tlcalculator.repository.builder.BillingslabQueryBuilder;
 import org.egov.tlcalculator.repository.BillingslabRepository;
 import org.egov.tlcalculator.utils.BillingslabConstants;
 import org.egov.tlcalculator.utils.BillingslabUtils;
@@ -52,6 +51,11 @@ public class BillingslabService {
 	@Autowired
 	private BillingSlabConfigs billingSlabConfigs;
 	
+	/**
+	 * Service layer for creating billing slabs
+	 * @param billingSlabReq
+	 * @return
+	 */
 	public BillingSlabRes createSlabs(BillingSlabReq billingSlabReq) {
 		enrichSlabsForCreate(billingSlabReq);
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
@@ -64,6 +68,11 @@ public class BillingslabService {
 				.billingSlab(billingSlabReq.getBillingSlab()).build();
 	}
 	
+	/**
+	 * Service layer for updating billing slabs
+	 * @param billingSlabReq
+	 * @return
+	 */
 	public BillingSlabRes updateSlabs(BillingSlabReq billingSlabReq) {
 		enrichSlabsForUpdate(billingSlabReq);
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab -> {
@@ -76,6 +85,12 @@ public class BillingslabService {
 				.billingSlab(billingSlabReq.getBillingSlab()).build();
 	}
 	
+	/**
+	 * Service layer for searching billing slabs from the db
+	 * @param criteria
+	 * @param requestInfo
+	 * @return
+	 */
 	public BillingSlabRes searchSlabs(BillingSlabSearchCriteria criteria, RequestInfo requestInfo) {
 		List<Object> preparedStmtList = new ArrayList<>();
 		String query = queryBuilder.getSearchQuery(criteria, preparedStmtList);
@@ -83,6 +98,12 @@ public class BillingslabService {
 				.billingSlab(repository.getDataFromDB(query, preparedStmtList)).build();
 	}
 	
+	/**
+	 * Enriches the request for creating billing slabs. Enrichment includes:
+	 * 1. Preparing audit information for the slab
+	 * 2. Setting id to the billing slabs
+	 * @param billingSlabReq
+	 */
 	public void enrichSlabsForCreate(BillingSlabReq billingSlabReq) {
 		AuditDetails audit = AuditDetails.builder().createdBy(billingSlabReq.getRequestInfo().getUserInfo().getUuid())
 				.createdTime(new Date().getTime()).lastModifiedBy(billingSlabReq.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(new Date().getTime()).build();
@@ -92,12 +113,22 @@ public class BillingslabService {
 		}
 	}
 	
+	/**
+	 * Enriches the request for updating billing slabs. Enrichment includes:
+	 * 1. Preparing audit information for the slab
+	 * @param billingSlabReq
+	 */
 	public void enrichSlabsForUpdate(BillingSlabReq billingSlabReq) {
 		AuditDetails audit = AuditDetails.builder().lastModifiedBy(billingSlabReq.getRequestInfo().getUserInfo().getUuid()).lastModifiedTime(new Date().getTime()).build();
 		billingSlabReq.getBillingSlab().parallelStream().forEach(slab ->  slab.setAuditDetails(audit) );
 	}
 	
 	
+	/**
+	 * Gets MDMS data from the mdms service based on the masters required.
+	 * @param billingSlabReq
+	 * @return Map<String, List<String>>
+	 */
 	public Map<String, List<String>> getMDMSDataForValidation(BillingSlabReq billingSlabReq){
 		Map<String, List<String>> mdmsMap = new HashMap<>();
 		String[] masters = {BillingslabConstants.TL_MDMS_TRADETYPE, BillingslabConstants.TL_MDMS_ACCESSORIESCATEGORY, 
@@ -117,7 +148,7 @@ public class BillingslabService {
 				}
 			}catch(Exception e) {
 				log.error("Couldn't fetch master: "+master);
-				log.error("Cause of exception: "+e);
+				log.error("Exception: "+e);
 				mdmsMap.put(master, new ArrayList<>());
 				continue;
 			}

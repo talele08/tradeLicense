@@ -41,8 +41,7 @@ public class TLCalculatorConfigs {
     private String businessService;
 
 
-
-    //TL Registry
+    //tradelicense Registry
     @Value("${egov.tradelicense.host}")
     private String tradeLicenseHost;
 
@@ -62,6 +61,25 @@ public class TLCalculatorConfigs {
     //TaxHeads
     @Value("${egov.taxhead.basetax}")
     private String baseTaxHead;
+
+    @Value("${egov.taxhead.adhoc.penalty}")
+    private String adhocPenaltyTaxHead;
+
+    @Value("${egov.taxhead.adhoc.exemption}")
+    private String adhocExemptionTaxHead;
+
+
+    //MDMS
+    @Value("${egov.mdms.host}")
+    private String mdmsHost;
+
+    @Value("${egov.mdms.search.endpoint}")
+    private String mdmsSearchEndpoint;
+
+
+    //Kafka Topics
+    @Value("${persister.save.tl.calculation.topic}")
+    private String saveTopic;
 
 
 }
